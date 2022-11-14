@@ -15,11 +15,11 @@
 #######################################
 persons_get() {
     if [[ $# -eq 0 ]]; then
-        curl -s http://localhost:3001/api/persons | python -m json.tool
+        curl -v http://localhost:3001/api/persons | python -m json.tool
         return
     fi
 
-    curl -s http://localhost:3001/api/persons/$1 | python -m json.tool
+    curl -v http://localhost:3001/api/persons/$1 | python -m json.tool
 }
 
 #######################################
