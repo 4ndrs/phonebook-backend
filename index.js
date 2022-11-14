@@ -54,6 +54,19 @@ app.delete("/api/persons/:id", (request, response) => {
 });
 
 app.post("/api/persons", (request, response) => {
+  const name = request.body.name;
+  const number = request.body.number;
+
+  if (!name || !number) {
+    return response
+      .status(400)
+      .json({ error: "both name and number fields are required" });
+  }
+
+  if (persons.find((p) => p.name.toLowerCase() === name.toLowerCase())) {
+    return response.status(400).json({ error: "name must be unique" });
+  }
+
   let id = 1;
   while (persons.find((p) => p.id === id)) {
     id = Math.floor(Math.random() * 10000);
