@@ -77,7 +77,8 @@ app.post("/api/persons", (request, response) => {
 
   persons = [...persons, person];
 
-  response.status(201).end();
+  response.location(`/api/persons/${id}`);
+  response.status(201).json(person);
 });
 
 app.get("/info", (request, response) => {
