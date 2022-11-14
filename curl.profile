@@ -2,9 +2,12 @@
 # Copyright (c) 2022 4ndrs <andres.degozaru@gmail.com>
 # SPDX-License-Identifier: MIT
 
-# This file is meant to be sourced: source curl.profile
+# This file is meant to be sourced: source ./curl.profile
 # functions will then be available directly in the terminal
 # as commands
+
+ENDPOINT=http://localhost:3001/api/persons
+PRETTIFY=('python' '-m' 'json.tool')
 
 #######################################
 # Gets all the persons in the current server
@@ -15,11 +18,11 @@
 #######################################
 persons_get() {
     if [[ $# -eq 0 ]]; then
-        curl -v http://localhost:3001/api/persons | python -m json.tool
+        curl -v $ENDPOINT | ${PRETTIFY[@]}
         return
     fi
 
-    curl -v http://localhost:3001/api/persons/$1 | python -m json.tool
+    curl -v $ENDPOINT/$1 | ${PRETTIFY[@]}
 }
 
 #######################################
@@ -33,7 +36,7 @@ persons_delete() {
         return
     fi
 
-    curl -vX DELETE http://localhost:3001/api/persons/$1
+    curl -vX DELETE $ENDPOINT/$1
     echo "\n"
 }
 
@@ -59,6 +62,6 @@ persons_delete() {
 #######################################
 persons_post() {
     read -d '' json
-    curl -v http://localhost:3001/api/persons --json $json
+    curl -v $ENDPOINT --json $json
     echo "\n"
 }
