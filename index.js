@@ -4,7 +4,27 @@ const morgan = require("morgan");
 const app = express();
 const PORT = 3001;
 
-app.use(morgan("tiny"));
+const morugan = (tokens, request, response) => {
+  const method = tokens.method(request, response);
+  const url = tokens.url(request, response);
+  const status = tokens.status(request, response);
+  const contentLength = tokens.res(request, response, "content-length");
+  const responseTime = tokens["response-time"](request, response);
+  const data = method === "POST" ? JSON.stringify(request.body) : "";
+
+  return [
+    method,
+    url,
+    status,
+    contentLength,
+    "-",
+    responseTime,
+    "ms",
+    data,
+  ].join(" ");
+};
+
+app.use(morgan(morugan));
 app.use(express.json());
 
 let persons = [
