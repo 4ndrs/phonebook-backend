@@ -3,6 +3,8 @@ const express = require("express");
 const app = express();
 const PORT = 3001;
 
+app.use(express.json());
+
 let persons = [
   {
     id: 1,
@@ -46,6 +48,20 @@ app.delete("/api/persons/:id", (request, response) => {
   persons = persons.filter((p) => p.id !== id);
 
   response.status(204).end();
+});
+
+app.post("/api/persons", (request, response) => {
+  let id = 1;
+  while (persons.find((p) => p.id === id)) {
+    id = Math.floor(Math.random() * 10000);
+  }
+
+  const person = { id, ...request.body };
+  console.log("created:", person);
+
+  persons = [...persons, person];
+
+  response.status(201).end();
 });
 
 app.get("/info", (request, response) => {
