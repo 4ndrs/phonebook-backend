@@ -59,7 +59,7 @@ app.post("/api/persons", (request, response) => {
     id = Math.floor(Math.random() * 10000);
   }
 
-  const person = { id, ...request.body };
+  const person = { ...request.body, id };
   console.log("created:", person);
 
   persons = [...persons, person];
