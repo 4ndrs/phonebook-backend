@@ -6,7 +6,7 @@
 # functions will then be available directly in the terminal
 # as commands
 
-ENDPOINT=http://localhost:3001/api/persons
+ENDPOINT=https://hagibook.fly.dev/api/persons
 PRETTIFY=('python' '-m' 'json.tool')
 
 #######################################
