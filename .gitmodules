@@ -1,0 +1,3 @@
+[submodule "phonebook-frontend"]
+	path = phonebook-frontend
+	url = git@github.com:4ndrs/phonebook-frontend.git
