@@ -25,6 +25,7 @@ const morugan = (tokens, request, response) => {
 };
 
 app.use(morgan(morugan));
+app.use(express.static("build"));
 app.use(express.json());
 
 let persons = [

@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon --watch index.js",
+    "build:ui": "cd phonebook-frontend && npm run build && rsync -av --delete build/ ../build/",
+    "deploy": "flyctl deploy",
+    "deploy:full": "npm run build:ui && npm run deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
