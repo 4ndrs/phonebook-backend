@@ -86,21 +86,15 @@ app.post("/api/persons", (request, response) => {
       .json({ error: "both name and number fields are required" });
   }
 
-  if (persons.find((p) => p.name.toLowerCase() === name.toLowerCase())) {
-    return response.status(400).json({ error: "name must be unique" });
-  }
+  const person = new Person({
+    name,
+    number,
+  });
 
-  let id = 1;
-  while (persons.find((p) => p.id === id)) {
-    id = Math.floor(Math.random() * 10000);
-  }
-
-  const person = { ...request.body, id };
-
-  persons = [...persons, person];
-
-  response.location(`/api/persons/${id}`);
-  response.status(201).json(person);
+  person.save().then((savedPerson) => {
+    response.location(`/api/persons/${savedPerson.id}`);
+    response.status(201).json(person);
+  });
 });
 
 app.get("/info", (request, response) => {
