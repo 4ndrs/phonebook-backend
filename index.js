@@ -1,6 +1,8 @@
 const express = require("express");
 const morgan = require("morgan");
 
+const Person = require("./models/person.js");
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -52,7 +54,7 @@ let persons = [
 ];
 
 app.get("/api/persons", (request, response) => {
-  response.json(persons);
+  Person.find({}).then((persons) => response.json(persons));
 });
 
 app.get("/api/persons/:id", (request, response) => {
