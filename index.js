@@ -30,8 +30,10 @@ app.use(morgan(morugan));
 app.use(express.static("build"));
 app.use(express.json());
 
-app.get("/api/persons", (request, response) => {
-  Person.find({}).then((persons) => response.json(persons));
+app.get("/api/persons", (request, response, next) => {
+  Person.find({})
+    .then((persons) => response.json(persons))
+    .catch((error) => next(error));
 });
 
 app.get("/api/persons/:id", (request, response) => {
@@ -45,13 +47,13 @@ app.get("/api/persons/:id", (request, response) => {
   response.json(person);
 });
 
-app.delete("/api/persons/:id", (request, response) => {
-  Person.findByIdAndDelete(request.params.id).then(() =>
-    response.status(204).end()
-  );
+app.delete("/api/persons/:id", (request, response, next) => {
+  Person.findByIdAndDelete(request.params.id)
+    .then(() => response.status(204).end())
+    .catch((error) => next(error));
 });
 
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   const name = request.body.name;
   const number = request.body.number;
 
@@ -66,10 +68,13 @@ app.post("/api/persons", (request, response) => {
     number,
   });
 
-  person.save().then((savedPerson) => {
-    response.location(`/api/persons/${savedPerson.id}`);
-    response.status(201).json(person);
-  });
+  person
+    .save()
+    .then((savedPerson) => {
+      response.location(`/api/persons/${savedPerson.id}`);
+      response.status(201).json(person);
+    })
+    .catch((error) => next(error));
 });
 
 app.get("/info", (request, response) => {
@@ -79,6 +84,17 @@ app.get("/info", (request, response) => {
 
   response.send(info);
 });
+
+const errorHandler = (error, request, response, next) => {
+  console.log(error);
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`phonebook-backend listening on port ${PORT}`);
