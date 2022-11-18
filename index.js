@@ -77,6 +77,16 @@ app.post("/api/persons", (request, response, next) => {
     .catch((error) => next(error));
 });
 
+app.put("/api/persons/:id", (request, response, next) => {
+  const person = {
+    number: request.body.number,
+  };
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then((updatedPerson) => response.json(updatedPerson))
+    .catch((error) => next(error));
+});
+
 app.get("/info", (request, response) => {
   const info =
     `<div>Phonebook has info for ${persons.length} people </div>` +
