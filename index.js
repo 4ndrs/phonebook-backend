@@ -54,12 +54,6 @@ app.post("/api/persons", (request, response, next) => {
   const name = request.body.name;
   const number = request.body.number;
 
-  if (!name || !number) {
-    return response
-      .status(400)
-      .json({ error: "both name and number fields are required" });
-  }
-
   const person = new Person({
     name,
     number,
@@ -76,10 +70,14 @@ app.post("/api/persons", (request, response, next) => {
 
 app.put("/api/persons/:id", (request, response, next) => {
   const person = {
+    name: request.body.name,
     number: request.body.number,
   };
 
-  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+  Person.findByIdAndUpdate(request.params.id, person, {
+    new: true,
+    runValidators: true,
+  })
     .then((updatedPerson) => response.json(updatedPerson))
     .catch((error) => next(error));
 });
@@ -100,6 +98,10 @@ const errorHandler = (error, request, response, next) => {
   console.log(error);
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
+  }
+
+  if (error.name === "ValidationError") {
+    return response.status(400).send({ error: error.message });
   }
 
   next(error);
