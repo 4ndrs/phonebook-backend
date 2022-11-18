@@ -70,7 +70,6 @@ app.post("/api/persons", (request, response, next) => {
 
 app.put("/api/persons/:id", (request, response, next) => {
   const person = {
-    name: request.body.name,
     number: request.body.number,
   };
 

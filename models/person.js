@@ -15,6 +15,18 @@ const personSchema = new mongoose.Schema({
   name: {
     type: String,
     minLength: 3,
+    validate: {
+      validator: function (v) {
+        return new Promise((resolve, reject) =>
+          this.constructor.find({ name: v }).then((results) => {
+            if (results.length > 0) {
+              reject(new Error(`${v} already exists in the database`));
+            }
+            resolve();
+          })
+        );
+      },
+    },
   },
   number: {
     type: String,
