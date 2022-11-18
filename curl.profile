@@ -65,3 +65,24 @@ persons_post() {
     curl -v $ENDPOINT --json $json
     echo "\n"
 }
+
+#######################################
+# Puts to a person in the server
+# Usage is similar to persons_post, but
+# needs the person's ID
+#
+# echo '{ "name": "Sarasa Feed", "number": "123456" }' | persons_put id
+#
+# Arguments:
+#       ID of the person to put
+#######################################
+persons_put() {
+    if [[ $# -eq 0 ]]; then
+        echo 'An id is needed to send the put request'
+        return
+    fi
+
+    read -d '' json
+    curl -vX PUT $ENDPOINT/$1 --json $json
+    echo "\n"
+}
