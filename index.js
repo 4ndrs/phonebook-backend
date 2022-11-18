@@ -36,15 +36,12 @@ app.get("/api/persons", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-app.get("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id);
-  const person = persons.find((p) => p.id === id);
-
-  if (!person) {
-    return response.status(404).end();
-  }
-
-  response.json(person);
+app.get("/api/persons/:id", (request, response, next) => {
+  Person.findById(request.params.id)
+    .then((person) => {
+      response.json(person);
+    })
+    .catch((error) => next(error));
 });
 
 app.delete("/api/persons/:id", (request, response, next) => {
@@ -87,12 +84,16 @@ app.put("/api/persons/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-app.get("/info", (request, response) => {
-  const info =
-    `<div>Phonebook has info for ${persons.length} people </div>` +
-    `<br /><div>${new Date()}</div>`;
+app.get("/info", (request, response, next) => {
+  Person.find({})
+    .then((persons) => {
+      const info =
+        `<div>Phonebook has info for ${persons.length} people </div>` +
+        `<br /><div>${new Date()}</div>`;
 
-  response.send(info);
+      response.send(info);
+    })
+    .catch((error) => next(error));
 });
 
 const errorHandler = (error, request, response, next) => {
